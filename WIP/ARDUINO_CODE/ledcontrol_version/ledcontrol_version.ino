@@ -17,7 +17,7 @@ LedControl fila2 = LedControl(fila2_data_pin, fila2_clock_pin, fila2_load_pin, n
 
 String mensaje = "";
 
-const static byte simbolos_altura10[95][8] = {
+const static byte simbolos_altura10[96][8] = {
   {B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000}, //
   {B00000000, B00011000, B00011000, B00011000, B00011000, B00000000, B00011000, B00011000}, // !
   {B00000000, B01100110, B01100110, B01100110, B00000000, B00000000, B00000000, B00000000}, // "
@@ -82,7 +82,7 @@ const static byte simbolos_altura10[95][8] = {
   {B00000000, B00111000, B00001000, B00001000, B00001000, B00001000, B00001000, B00111000}, // ]
   {B00000000, B00010000, B00101000, B01000100, B00000000, B00000000, B00000000, B00000000}, // ^
   {B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B01111100}, // _
-  {B00000000, B00001000, B00010000, B00100000, B00000000, B00000000, B00000000, B00000000}, // `
+  {B00000000, B00011000, B00011000, B00001100, B00000000, B00000000, B00000000, B00000000}, // `
   {B00000000, B00000000, B00111000, B00000100, B00111100, B01000100, B01000100, B00111100}, // a
   {B00000000, B01000000, B01000000, B01111000, B01000100, B01000100, B01000100, B01111000}, // b
   {B00000000, B00000000, B00111000, B01000100, B01000000, B01000000, B01000100, B00111000}, // c
@@ -112,7 +112,7 @@ const static byte simbolos_altura10[95][8] = {
   {B00000000, B00011000, B00100000, B00100000, B01000000, B00100000, B00100000, B00011000}, // {
   {B00000000, B00010000, B00010000, B00010000, B00010000, B00010000, B00010000, B00010000}, // |
   {B00000000, B01100000, B00010000, B00010000, B00001000, B00010000, B00010000, B01100000}, // }
-  {B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000} // ~
+  {B00000000, B00000000, B00000000, B00000000, B01110111, B11011100, B00000000, B00000000} // ~
 
 
 };
@@ -124,10 +124,11 @@ void setup() {
 
   for (int disp = 0; disp < 3; disp++) {
     fila1.shutdown(disp, false);
-    fila2.shutdown(disp, false);
     fila1.setIntensity(disp, 8);
-    fila2.setIntensity(disp, 8);
     fila1.clearDisplay(disp);
+    
+    fila2.shutdown(disp, false);
+    fila2.setIntensity(disp, 8); 
     fila2.clearDisplay(disp);
   }
 
@@ -153,7 +154,7 @@ void checkIncommingData() {
 
 
   // updateMatrix("hola");
-  scrollMsg(arr, 150);
+  scrollMsg(arr, 25);
 }
 
 void updateMatrix(String frase) {
@@ -182,6 +183,9 @@ void updateMatrix(String frase) {
 void escribirFrase(const char* frase, int posicion) {
   for (size_t i = 0; i < strlen(frase); i++) {
     escribirCaracter(frase[i], (i * 8) + posicion);
+    if(Serial.available() > 0){
+      break;
+    }
   }
 }
 
@@ -230,6 +234,10 @@ void escribirCaracter(char caracter , int posicion) {
     
     
     fila1.setColumn(address, posendisplay, codigocaracter[i]);
+    fila2.setColumn(address, posendisplay, codigocaracter[i]);
+    
+    
+    
   }
 }
 
