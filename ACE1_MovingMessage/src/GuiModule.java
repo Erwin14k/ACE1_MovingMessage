@@ -1,3 +1,4 @@
+import panamahitek.Arduino.PanamaHitek_Arduino;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -7,11 +8,16 @@ import java.util.logging.Logger;
 
 public class GuiModule {
     static MessageList messageListHandler = new MessageList();
-    public static void loginFrame() throws IOException {
+    static PanamaHitek_Arduino arduinoHandler = new PanamaHitek_Arduino();
+
+
+    public static void loginFrame() throws Exception {
+        arduinoHandler.arduinoTX("COM1",9600);
         //Fonts used
         Font font =new Font("Arial",Font.BOLD,50);
         Font font2 =new Font("Helvetica",Font.BOLD,30);
         Font font3 =new Font("Showcard Gothic",Font.BOLD,30);
+
 
         //Frame Initialization.
         JFrame loginFrame = new JFrame("Moving Message");
@@ -173,7 +179,7 @@ public class GuiModule {
                 adminView.dispose();
                 try {
                     loginFrame();
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     Logger.getLogger(GuiModule.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -242,10 +248,10 @@ public class GuiModule {
                 messageListHandler.finalInsert(messageTF.getText());
                 adminView.dispose();
                 try {
+                    arduinoHandler.sendData(messageTF.getText());
                     adminView();
-
-                } catch (IOException ex) {
-                    Logger.getLogger(GuiModule.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
 
 
