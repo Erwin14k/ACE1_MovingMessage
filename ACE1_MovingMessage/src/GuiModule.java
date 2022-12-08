@@ -11,8 +11,7 @@ public class GuiModule {
     static PanamaHitek_Arduino arduinoHandler = new PanamaHitek_Arduino();
 
 
-    public static void loginFrame() throws Exception {
-        arduinoHandler.arduinoTX("COM1",9600);
+    /*public static void loginFrame() throws Exception {
         //Fonts used
         Font font =new Font("Arial",Font.BOLD,50);
         Font font2 =new Font("Helvetica",Font.BOLD,30);
@@ -115,6 +114,8 @@ public class GuiModule {
                         adminView();
                     } catch (IOException ex) {
                         Logger.getLogger(GuiModule.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
                     }
                 }else{
                     JOptionPane.showMessageDialog(null,"<html><p style=\"color:red; font:20px;\">Invalid User/Password, try again!!</p></html>" );
@@ -123,11 +124,16 @@ public class GuiModule {
         });
         loginFrame.add(loginButton);
         loginFrame.repaint();
+    }*/
+
+
+
+    public static void initApp() throws Exception {
+        arduinoHandler.arduinoTX("COM1",9600);
+        adminView();
     }
+    public static void adminView() throws Exception {
 
-
-
-    public static void adminView() throws IOException {
         //Fonts Used
         Font font =new Font("Arial",Font.BOLD,36);
         Font font2 =new Font("Helvetica",Font.BOLD,30);
@@ -154,9 +160,9 @@ public class GuiModule {
         //screen width.
         int w= sizeScreen.width;
         //Frame size.
-        adminView.setSize(1500,800);
+        adminView.setSize(860,800);
         //Frame coordinates.
-        adminView.setLocation(w/4,h/4);
+        adminView.setLocation(0,0);
 
         JLabel titleM = new JLabel("Sent Messages");
         titleM.setLayout(null);
@@ -177,16 +183,11 @@ public class GuiModule {
         logOutButton.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent ecp){
                 adminView.dispose();
-                try {
-                    loginFrame();
-                } catch (Exception ex) {
-                    Logger.getLogger(GuiModule.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
         });
         adminView.add(logOutButton);
 
-        //Icon Label
+        /*//Icon Label
         JLabel graphLabel = new JLabel("");
         graphLabel.setLayout(null);
         graphLabel.setVisible(true);
@@ -208,7 +209,7 @@ public class GuiModule {
         descriptionLabel.setBounds(1040,630,600,60);
         descriptionLabel.setFont(font3);
         adminView.add(descriptionLabel);
-
+        */
         //Table creation
         int n=0;
         String[] header = {"Id","Message"};
@@ -248,7 +249,11 @@ public class GuiModule {
                 messageListHandler.finalInsert(messageTF.getText());
                 adminView.dispose();
                 try {
-                    arduinoHandler.sendData(messageTF.getText());
+                    for(int i=0;i<messageTF.getText().length();i++){
+                        char c=messageTF.getText().charAt(i);
+                        int charCode=c;
+                        arduinoHandler.sendByte(charCode);
+                    }
                     adminView();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
