@@ -151,7 +151,7 @@ public class GuiModule {
         //Background color
         adminView.getContentPane().setBackground(Color.orange);
         //On close behavior.
-        adminView.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        adminView.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //Get screen dimensions.
         Toolkit myScreen= Toolkit.getDefaultToolkit();
         Dimension sizeScreen = myScreen.getScreenSize();
